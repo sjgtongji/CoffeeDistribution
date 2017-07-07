@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Coffee-Store</string>
+    <string name="app_name">配送员</string>
     <string name="hint_name">请输入手机号码</string>
     <string name="hint_password">密码</string>
     <string name="login">登录</string>

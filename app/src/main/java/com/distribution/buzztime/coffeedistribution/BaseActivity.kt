@@ -8,11 +8,14 @@ import android.databinding.DataBindingUtil
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.view.ViewStub
 import android.view.Window
 import android.widget.RelativeLayout
+import com.distribution.buzztime.coffeedistribution.http.*
 import com.distribution.buzztime.coffeedistribution.view.NavigationBar
+import com.google.gson.Gson
 
 /**
  * Created by jigangsun on 2017/6/14.
@@ -26,6 +29,7 @@ abstract class BaseActivity : AppCompatActivity() {
     protected var TAG = this.javaClass.simpleName;
     lateinit protected var dialog: ProgressDialog;
     lateinit protected var context: Context;
+    var gson : Gson = Gson();
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -119,5 +123,29 @@ abstract class BaseActivity : AppCompatActivity() {
         if (dialog != null) {
             dialog.dismiss()
         }
+    }
+
+    fun <T> get(url : String  , callback: HttpCallback<T>){
+        var baseResp : HttpBaseResp = HttpBaseResp();
+        url.request().get().rxExecute()
+                .map({r -> r.body().string()})
+                .observeOnMain()
+                .subscribeSafeNext { result ->
+                    Log.d(TAG, result)
+                    if(Settings.TEST_REST){
+                        callback.onSuccess(callback.onTestRest());
+                    }else{
+                        baseResp = toResp(result);
+                        when(baseResp.code){
+                            200 -> {
+                                var resp : T = gson.fromJson(baseResp.value , callback.claze) as T;
+                                callback.onSuccess(resp);
+                            }
+                            else -> {
+                                callback.onFail(baseResp)
+                            }
+                        }
+                    }
+                }
     }
 }

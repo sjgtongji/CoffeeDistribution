@@ -35,13 +35,23 @@ class MainActivity : BaseActivity() , View.OnClickListener{
                 // TODO login
                 var address = "${Settings.LOGIN_URL}?name=$name&passWord=$password&deviceId=$deviceId";
                 Log.d(TAG , address)
-                address.request().get().rxExecute()
-                        .map({ r -> r.body().string() })
-                        .observeOnMain()
-                        .subscribeSafeNext { result -> Log.d(TAG, "request result: $result");}
-//                ()
-//                Settings.LOGIN_URL.request().post(RequestBody.create(MediaType.parse("application/json; charset=UTF-8") , Gson().toJson(user))).rxExecute().map({ r -> r.body().string() })
-//                        .observeOnMain().subscribeSafeNext { result ->  Log.d(TAG, "request result: $result");}
+                var callback = object  : HttpCallback<LoginResp>(LoginResp::class.java){
+                    override fun onTestRest(): LoginResp {
+                        return LoginResp();
+                    }
+
+                    override fun onSuccess(t: LoginResp?) {
+                        Log.d(TAG , "success")
+                        pushActivity(OrderActivity::class.java)
+                    }
+
+                    override fun onFail(t: HttpBaseResp?) {
+                        Log.e(TAG , t!!.message);
+                    }
+
+                }
+                get(address , callback);
+
             }
             else -> {}
         }
@@ -51,7 +61,8 @@ class MainActivity : BaseActivity() , View.OnClickListener{
     lateinit var dataBind : ActivityMainBinding;
 
     override fun initViews() {
-
+        navigationBar.hiddenButtons()
+        navigationBar.setTitle("登录")
     }
 
     override fun initEvents() {

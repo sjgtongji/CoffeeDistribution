@@ -8,6 +8,7 @@ import com.squareup.okhttp.Callback
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request
 import com.squareup.okhttp.Response
+import org.json.JSONObject
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -45,3 +46,21 @@ fun <T> Observable<T>.observeOnMain(): Observable<T> = this.observeOn(AndroidSch
 fun <T> Observable<T>.subscribeSafeNext(onNext: (T) -> Unit): Subscription = this.subscribe(onNext, { t -> Log.e(TAG, "", t) }, {});
 
 fun <T> Observable<T>.subscribeSafeCompleted(onCompleted: () -> Unit): Subscription = this.subscribe({}, { t -> Log.e(TAG, "", t) }, onCompleted);
+
+fun toResp(string : String) : HttpBaseResp {
+    val jObj = JSONObject(string)
+    val jResult = HttpBaseResp()
+    if (jObj.has("code"))
+    {
+        jResult.code = jObj.getInt("code");
+    }
+    if (jObj.has("message"))
+    {
+        jResult.message = jObj.getString("message")
+    }
+    if (jObj.has("value"))
+    {
+        jResult.value = jObj.getString("value")
+    }
+    return jResult
+}

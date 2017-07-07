@@ -31,8 +31,28 @@
         <item name="android:textColor">@color/text_red</item>
         <item name="android:textSize">@dimen/text_size_s</item>
     </style>
+    <style name="red_text_content">
+        <item name="android:textColor">@color/text_red</item>
+        <item name="android:textSize">@dimen/text_size_content</item>
+    </style>
     <style name="blue_text_s">
         <item name="android:textColor">@color/text_blue</item>
         <item name="android:textSize">@dimen/text_size_s</item>
+    </style>
+    <style name="yellow_text_h1">
+        <item name="android:textColor">@color/text_yellow</item>
+        <item name="android:textSize">@dimen/text_size_h1</item>
+    </style>
+    <style name="yellow_btn">
+        <item name="android:textColor">@color/bg_white</item>
+        <item name="android:textSize">@dimen/text_size_content</item>
+        <item name="android:background">@drawable/bg_btn</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+    <style name="white_btn">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_size_content</item>
+        <item name="android:background">@drawable/bg_btn_white</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 </resources>

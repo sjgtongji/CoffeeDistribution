@@ -4,18 +4,18 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="navigationbar_height">100px</dimen>
-    <dimen name="small_text_size">16sp</dimen>
-    <dimen name="medium_text_size">20sp</dimen>
-    <dimen name="big_text_size">24sp</dimen>
+    <dimen name="small_text_size">24px</dimen>
+    <dimen name="medium_text_size">30px</dimen>
+    <dimen name="big_text_size">42px</dimen>
     <dimen name="text_view_padding">5dp</dimen>
     <dimen name="edit_text_padding">5dp</dimen>
     <dimen name="layout_padding_left_right">10dp</dimen>
     <dimen name="layout_padding_top_bottom">5dp</dimen>
     <dimen name="btn_padding">10dp</dimen>
-    <dimen name="text_size_h1">20px</dimen>
-    <dimen name="text_size_h2">18px</dimen>
-    <dimen name="text_size_content">16px</dimen>
-    <dimen name="text_size_s">14px</dimen>
+    <dimen name="text_size_h1">30px</dimen>
+    <dimen name="text_size_h2">27px</dimen>
+    <dimen name="text_size_content">24px</dimen>
+    <dimen name="text_size_s">21px</dimen>
     <dimen name="btn_width">150dp</dimen>
     <dimen name="btn_height">30dp</dimen>
 </resources>
