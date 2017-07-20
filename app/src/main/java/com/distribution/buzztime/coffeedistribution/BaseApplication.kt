@@ -3,6 +3,8 @@ package com.distribution.buzztime.coffeedistribution;
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import com.distribution.buzztime.coffeedistribution.Bean.Order
+import com.distribution.buzztime.coffeedistribution.http.LoginResp
 import java.util.*
 
 /**
@@ -15,6 +17,9 @@ import java.util.*
  */
 class BaseApplication : Application() {
     var speechHelper : SpeechHelper? = null
+    var loginResp : LoginResp? = null
+    var unReceiveOrders : MutableList<Order> = mutableListOf<Order>()
+    var order : Order? = null
     override fun onCreate() {
         super.onCreate()
         context = this

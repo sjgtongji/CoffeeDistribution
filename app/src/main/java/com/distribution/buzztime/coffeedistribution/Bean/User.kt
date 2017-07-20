@@ -7,6 +7,6 @@ import android.databinding.BaseObservable
  */
 
 public class User : BaseObservable(){
-    var name : String = "test";
-    var password : String = "1111";
+    var mobile : String = "";
+    var passWord : String = "";
 }

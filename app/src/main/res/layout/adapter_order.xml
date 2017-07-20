@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <variable name="data" type="com.store.buzztime.coffee_store.Bean.Order" />
+        <variable name="data" type="com.distribution.buzztime.coffeedistribution.Bean.Order" />
     </data>
     <LinearLayout
         android:orientation="vertical" android:layout_width="match_parent"
@@ -85,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/gray_text_content"
-                android:text="@{data.address}"
+                android:text=""
                 android:maxLines="3"
                 android:layout_gravity="center_vertical"/>
         </LinearLayout>
@@ -109,7 +109,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/gray_text_content"
-                android:text="@{data.distributeTime}"/>
+                android:text="@{data.createTimeShow}"/>
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -154,7 +154,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/black_text_content"
-                android:text="@{data.distrbuterName}"
+                android:text="@{data.distributionName}"
                 android:maxLines="3"/>
         </LinearLayout>
         <View

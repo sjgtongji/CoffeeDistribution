@@ -1,9 +1,12 @@
 package com.distribution.buzztime.coffeedistribution
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
+import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.TextWatcher
@@ -28,21 +31,30 @@ class MainActivity : BaseActivity() , View.OnClickListener{
             R.id.btn_login -> {
                 var name : String = et_name.text.toString();
                 var password : String = et_password.text.toString();
-                user.name = name;
-                user.password = password;
-                var telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager;
-                var deviceId = telephonyManager.deviceId;
+                if(DEBUG){
+                    user.mobile = "15026648703"
+                    user.passWord = "123"
+                }else{
+                    user.mobile = name
+                    user.passWord = password
+                }
+
                 // TODO login
-                var address = "${Settings.LOGIN_URL}?name=$name&passWord=$password&deviceId=$deviceId";
+                var address =
+                        if(DEBUG){
+                            "${Settings.LOGIN_URL}";
+                        }else{
+                            "${Settings.LOGIN_URL}"
+                        }
                 Log.d(TAG , address)
-                var callback = object  : HttpCallback<LoginResp>(LoginResp::class.java){
-                    override fun onTestRest(): LoginResp {
-                        return LoginResp();
+                var callback = object  : HttpCallback<Boolean>(Boolean::class.java){
+                    override fun onTestRest(): Boolean {
+                        return true;
                     }
 
-                    override fun onSuccess(t: LoginResp?) {
-                        Log.d(TAG , "success")
-                        pushActivity(OrderActivity::class.java)
+                    override fun onSuccess(t: Boolean?) {
+                        Log.d(TAG , "success" + gson.toJson(t))
+                        pushActivity(OrderActivity::class.java , true)
                     }
 
                     override fun onFail(t: HttpBaseResp?) {
@@ -50,7 +62,7 @@ class MainActivity : BaseActivity() , View.OnClickListener{
                     }
 
                 }
-                get(address , callback);
+                post(address , gson.toJson(user) , callback);
 
             }
             else -> {}
@@ -59,10 +71,24 @@ class MainActivity : BaseActivity() , View.OnClickListener{
 
     var user : User = User();
     lateinit var dataBind : ActivityMainBinding;
+    var permissions : MutableList<String> = mutableListOf(
+            android.Manifest.permission.READ_PHONE_STATE ,
+            android.Manifest.permission.WRITE_SETTINGS ,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.CHANGE_NETWORK_STATE);
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun initViews() {
         navigationBar.hiddenButtons()
         navigationBar.setTitle("登录")
+        for(permission in permissions){
+            var hasPermission : Boolean = checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
+            if(!hasPermission){
+                requestPermissions( permissions.toTypedArray(), 0);
+            }
+        }
     }
 
     override fun initEvents() {
@@ -92,6 +118,5 @@ class MainActivity : BaseActivity() , View.OnClickListener{
         super.onCreate(savedInstanceState)
         super.setContentView(R.layout.activity_main)
     }
-
 
 }

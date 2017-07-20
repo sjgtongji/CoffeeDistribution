@@ -30,7 +30,9 @@ abstract class BaseActivity : AppCompatActivity() {
     protected var TAG = this.javaClass.simpleName;
     lateinit protected var dialog: ProgressDialog;
     lateinit protected var context: Context;
+    var DEBUG : Boolean = true
     var gson : Gson = Gson();
+    var http : HttpUtils = HttpUtils()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -110,27 +112,32 @@ abstract class BaseActivity : AppCompatActivity() {
 
 
     fun <T> get(url : String  , callback: HttpCallback<T>){
-        var baseResp : HttpBaseResp = HttpBaseResp();
-        url.request().get().rxExecute()
-                .map({r -> r.body().string()})
-                .observeOnMain()
-                .subscribeSafeNext { result ->
-                    Log.d(TAG, result)
-                    if(Settings.TEST_REST){
-                        callback.onSuccess(callback.onTestRest());
-                    }else{
-                        baseResp = toResp(result);
-                        when(baseResp.code){
-                            200 -> {
-                                var resp : T = gson.fromJson(baseResp.value , callback.claze) as T;
-                                callback.onSuccess(resp);
-                            }
-                            else -> {
-                                callback.onFail(baseResp)
-                            }
-                        }
-                    }
-                }
+        http.get(url , callback)
+//        var baseResp : HttpBaseResp = HttpBaseResp();
+//        url.request().get().rxExecute()
+//                .map({r -> r.body().string()})
+//                .observeOnMain()
+//                .subscribeSafeNext { result ->
+//                    Log.d(TAG, result)
+//                    if(Settings.TEST_REST){
+//                        callback.onSuccess(callback.onTestRest());
+//                    }else{
+//                        baseResp = toResp(result);
+//                        when(baseResp.code){
+//                            200 -> {
+//                                var resp : T = gson.fromJson(baseResp.value , callback.claze) as T;
+//                                callback.onSuccess(resp);
+//                            }
+//                            else -> {
+//                                callback.onFail(baseResp)
+//                            }
+//                        }
+//                    }
+//                }
+    }
+
+    fun <T> post(url : String  , params : String , callback: HttpCallback<T>){
+        http.post(url , params , callback)
     }
 
 

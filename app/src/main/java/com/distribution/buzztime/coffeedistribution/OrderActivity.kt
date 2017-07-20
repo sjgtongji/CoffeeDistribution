@@ -12,8 +12,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import com.android.databinding.library.baseAdapters.BR
 import com.distribution.buzztime.coffeedistribution.BaseActivity
+import com.distribution.buzztime.coffeedistribution.Bean.Order
 import com.distribution.buzztime.coffeedistribution.R
-import com.store.buzztime.coffee_store.Bean.Order
+import com.distribution.buzztime.coffeedistribution.http.HttpBaseResp
+import com.distribution.buzztime.coffeedistribution.http.HttpCallback
+import com.distribution.buzztime.coffeedistribution.http.OrderResp
+import com.distribution.buzztime.coffeedistribution.http.Settings
 import kotlinx.android.synthetic.main.activity_order.*
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.textColor
@@ -30,11 +34,6 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
         }
     }
 
-    var orders = listOf<Order>(
-            Order(),
-            Order(),
-            Order()
-    )
     override fun initViews() {
         navigationBar.setTitle("骑手")
         navigationBar.hiddenLeftButton()
@@ -51,7 +50,27 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
     }
 
     override fun initDatas(view: View) {
+        var callback = object : HttpCallback<OrderResp>(OrderResp::class.java){
+            override fun onSuccess(t: OrderResp?) {
+                Log.e(TAG , gson.toJson(t))
+            }
 
+            override fun onFail(resp: HttpBaseResp?) {
+
+            }
+
+            override fun onTestRest(): OrderResp {
+                return OrderResp()
+            }
+
+        }
+        var url =
+                if(DEBUG){
+                    "${Settings.GET_UNASSIGNED_ORDER_URL}?startIndex=1&count=20"
+                }else{
+                    "${Settings.GET_UNASSIGNED_ORDER_URL}?startIndex=1&count=20"
+                }
+        get(url , callback)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
