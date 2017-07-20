@@ -14,9 +14,13 @@ import android.view.View
 import android.view.ViewStub
 import android.view.Window
 import android.widget.RelativeLayout
+import android.widget.Toast
 import com.distribution.buzztime.coffeedistribution.http.*
 import com.distribution.buzztime.coffeedistribution.view.NavigationBar
 import com.google.gson.Gson
+import java.text.SimpleDateFormat
+import java.util.*
+import java.lang.Long
 
 /**
  * Created by jigangsun on 2017/6/14.
@@ -30,7 +34,7 @@ abstract class BaseActivity : AppCompatActivity() {
     protected var TAG = this.javaClass.simpleName;
     lateinit protected var dialog: ProgressDialog;
     lateinit protected var context: Context;
-    var DEBUG : Boolean = true
+    var DEBUG : Boolean = false
     var gson : Gson = Gson();
     var http : HttpUtils = HttpUtils()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -187,6 +191,44 @@ abstract class BaseActivity : AppCompatActivity() {
         pdlg.setOnCancelListener(listerner)
         // pdlg.setIndeterminateDrawable(context.getResources().getDrawable(R.drawable.frame_loading));
         return pdlg
+    }
+
+    fun formatDateTime(time : String) : String{
+        var result : String = time.replace("/Date(", "").replace(")/", "")
+        val time = result.substring(0, result.length - 5)
+        val date = Date(Long.parseLong(time))
+        val format : String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date)
+        return format
+    }
+
+    fun formatTime(time : String):String{
+        var result : String = time.replace("/Date(", "").replace(")/", "")
+        val time = result.substring(0, result.length - 5)
+        val date = Date(Long.parseLong(time))
+        val format : String = SimpleDateFormat("HH:mm:ss").format(date)
+        return format
+    }
+
+    fun formatTimeInOneDay(time : kotlin.Long):String{
+        val perHour : kotlin.Int = 3600000
+        var hour : kotlin.Long = time.div(perHour)
+        var min : kotlin.Long  =  time.rem(perHour).div(60000)
+        if(min.toInt() == 0) {
+            return return hour.toString() + ":" + "00"
+        }else{
+            return return hour.toString() + ":" + min.toString()
+        }
+    }
+
+    fun showText(text : String){
+        showShort(text)
+    }
+    fun showShort(text : String){
+        Toast.makeText(this, text , Toast.LENGTH_SHORT).show()
+    }
+
+    fun showLong(text : String){
+        Toast.makeText(this, text , Toast.LENGTH_LONG).show()
     }
 
 }

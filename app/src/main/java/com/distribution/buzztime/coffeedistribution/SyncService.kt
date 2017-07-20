@@ -14,6 +14,7 @@ import com.distribution.buzztime.coffeedistribution.HttpUtils
 import com.distribution.buzztime.coffeedistribution.PrefUtils
 import com.distribution.buzztime.coffeedistribution.http.HttpBaseResp
 import com.distribution.buzztime.coffeedistribution.http.HttpCallback
+import com.distribution.buzztime.coffeedistribution.http.OrderResp
 import com.distribution.buzztime.coffeedistribution.http.Settings
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_order.*
@@ -38,6 +39,8 @@ class SyncService : Service() {
     private val mWakeLock: PowerManager.WakeLock? = null // 亮屏控制器
 
     private val http : HttpUtils = HttpUtils()
+
+    val gson : Gson = Gson()
 
     /**
      * 启动服务
@@ -166,6 +169,32 @@ class SyncService : Service() {
     }
 
     fun getUnreceiveOrders(){
+        var callback = object : HttpCallback<OrderResp>(OrderResp::class.java){
+            override fun onSuccess(t: OrderResp?) {
+                Log.e(TAG , gson.toJson(t))
+                var orders = (application as BaseApplication).unReceiveOrders
+                for(order in t!!.Items){
+                    if(!orders.contains(order)){
+                        sendBroadcast(Intent(this@SyncService, NewOrderReceiver::class.java))
+                        break;
+                    }
+                }
+
+            }
+
+            override fun onFail(resp: HttpBaseResp?) {
+                Log.e(TAG , resp!!.message)
+            }
+
+            override fun onTestRest(): OrderResp {
+                return OrderResp()
+            }
+
+        }
+        var url = "${Settings.GET_UNASSIGNED_ORDER_URL}?distributionId=${(application as BaseApplication).loginResp!!.Id}&startIndex=1&count=20"
+
+        Log.e(TAG, url)
+        http.get(url , callback)
 //        var callback = object  : HttpCallback<OrderResp>(OrderResp::class.java){
 //            override fun onTestRest(): OrderResp {
 //                return OrderResp()

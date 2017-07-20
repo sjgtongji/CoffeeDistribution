@@ -42,28 +42,31 @@ class MainActivity : BaseActivity() , View.OnClickListener{
                 // TODO login
                 var address =
                         if(DEBUG){
-                            "${Settings.LOGIN_URL}";
+                            "${Settings.LOGIN_URL}?mobile=15026648703&passWord=123";
                         }else{
-                            "${Settings.LOGIN_URL}"
+                            "${Settings.LOGIN_URL}?mobile=${name}&passWord=${password}"
                         }
-                Log.d(TAG , address)
-                var callback = object  : HttpCallback<Boolean>(Boolean::class.java){
-                    override fun onTestRest(): Boolean {
-                        return true;
+                Log.e(TAG , address)
+                var callback = object  : HttpCallback<LoginResp>(LoginResp::class.java){
+                    override fun onTestRest(): LoginResp {
+                        return LoginResp();
                     }
 
-                    override fun onSuccess(t: Boolean?) {
-                        Log.d(TAG , "success" + gson.toJson(t))
+                    override fun onSuccess(t: LoginResp?) {
+                        Log.e(TAG , "success" + gson.toJson(t))
+                        application.loginResp = t
                         pushActivity(OrderActivity::class.java , true)
                     }
 
                     override fun onFail(t: HttpBaseResp?) {
+                        Log.e(TAG , gson.toJson(t))
                         Log.e(TAG , t!!.message);
                     }
 
                 }
-                post(address , gson.toJson(user) , callback);
-
+                get(address , callback);
+//                application.speechHelper!!.startSpeaking("你有新的订单")
+//                pushActivity(OrderActivity::class.java , true)
             }
             else -> {}
         }

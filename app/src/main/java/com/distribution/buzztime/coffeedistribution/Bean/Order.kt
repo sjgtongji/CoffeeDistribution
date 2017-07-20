@@ -60,6 +60,7 @@ class Order{
     var payMoneyShow : String = ""
     var couponMoneyShow : String = ""
     var serviceFeeShow : String = ""
+    var distributeTime : String = "";
     override fun equals(other: Any?): Boolean {
         if(other is Order){
             var otherOrder : Order = other as Order
