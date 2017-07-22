@@ -1,5 +1,6 @@
 package com.distribution.buzztime.coffeedistribution
 
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -15,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import com.distribution.buzztime.coffeedistribution.BaseActivity
 import com.distribution.buzztime.coffeedistribution.Bean.Order
 import com.distribution.buzztime.coffeedistribution.R
@@ -72,11 +74,11 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
         orderReceiver = OrderReciver()
         var filter : IntentFilter = IntentFilter();
         filter.addAction(Settings.ACTION_ORDER)
-        LocalBroadcastManager.getInstance(this).registerReceiver(orderReceiver , filter)
+        registerReceiver(orderReceiver , filter)
     }
 
     override fun onDestroy() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(orderReceiver)
+        unregisterReceiver(orderReceiver)
         super.onDestroy()
     }
     fun getUnreceiveOrders(){
@@ -189,6 +191,28 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
         get(url  , callback)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK){
+            when(requestCode){
+                1 -> {
+                    when(data!!.getIntExtra(Settings.ORDER_OPERATION_KEY , -1)){
+                        Settings.ORDER_OPERATION_CONFIRM -> {
+                            receiveOrder(application.order!! , Settings.ORDER_RIDER_GET)
+                        }
+                        Settings.ORDER_OPERATION_GETED -> {
+                            receiveOrder(application.order!! , Settings.ORDER_RIDER_POST)
+                        }
+                        Settings.ORDER_OPERATION_POSTED -> {
+                            receiveOrder(application.order!! , Settings.ORDER_FINISH)
+                        }
+                    }
+                }
+                else -> {}
+            }
+        }
+    }
+
     inner class OrderAdapter(val data : List<Order>) : RecyclerView.Adapter<OrderViewHolder>() , View.OnClickListener{
         override fun onClick(v: View?) {
             when(v!!.id){
@@ -209,6 +233,23 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
                     Log.e("" , "cancel" + v.tag)
 
                 }
+                R.id.ll_order -> {
+                    application.order = data[v.tag as Int]
+//                    pushActivity(OrderDetailActivity::class.java)
+                    var intent = Intent(this@OrderActivity , OrderDetailActivity::class.java)
+                    if(isUnreceive){
+                        intent.putExtra(Settings.ORDER_OPERATION_KEY , Settings.ORDER_OPERATION_CONFIRM)
+                    }else{
+                        if(data[v.tag as Int].orderState == Settings.ORDER_RIDER_GET) {
+                            intent.putExtra(Settings.ORDER_OPERATION_KEY, Settings.ORDER_OPERATION_GETED)
+                        }
+                        else if(data[v.tag as Int].orderState == Settings.ORDER_RIDER_POST){
+                            intent.putExtra(Settings.ORDER_OPERATION_KEY, Settings.ORDER_OPERATION_POSTED)
+                        }
+                    }
+                    pushActivityForResult(intent , 1)
+//                    pushActivity(OrderActivity::class.java)
+                }
                 else -> {Log.e("" , "error")}
             }
         }
@@ -217,6 +258,8 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
         override fun onBindViewHolder(p0: OrderViewHolder, p1: Int) {
             p0.btn_cancel.setOnClickListener(this)
             p0.btn_cancel.setTag(p1)
+            p0.ll_order.setOnClickListener(this)
+            p0.ll_order.setTag(p1)
             when(data[p1].orderState){
                 Settings.ORDER_STORE_CONFIRM -> {
                     p0.btn_cancel.text = "接单"
@@ -248,11 +291,14 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
 
     class OrderViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root){
         var btn_cancel : Button
+        var ll_order : LinearLayout
         init {
             btn_cancel = binding.root.findViewById(R.id.btn_cancel) as Button
+            ll_order = binding.root.findViewById(R.id.ll_order) as LinearLayout
         }
         fun bind(data : Any){
             binding.setVariable(BR.data , data)
+            binding.setVariable(BR.address , (data as Order).address)
             binding.executePendingBindings()
         }
     }

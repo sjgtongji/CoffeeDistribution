@@ -64,6 +64,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".OrderActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".OrderDetailActivity" android:screenOrientation="portrait"></activity>
         <service android:name=".SyncService"></service>
         <receiver android:name=".NewOrderReceiver"></receiver>
 

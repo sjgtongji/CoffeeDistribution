@@ -2,8 +2,10 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable name="data" type="com.distribution.buzztime.coffeedistribution.Bean.Order" />
+        <variable name="address" type="com.distribution.buzztime.coffeedistribution.Bean.Address"/>
     </data>
     <LinearLayout
+        android:id="@+id/ll_order"
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/activity_vertical_margin"
@@ -120,6 +122,28 @@
                 android:layout_height="wrap_content"
                 style="@style/gray_text_h1"
                 android:text="@{data.distributeTime}"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/bg_gray"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"></View>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/gray_text_h1"
+                android:text="电话:"/>
+            <TextView
+                android:id="@+id/tv_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/gray_text_h1"
+                android:text="@{address.telephone}" />
         </LinearLayout>
         <View
             android:layout_width="match_parent"

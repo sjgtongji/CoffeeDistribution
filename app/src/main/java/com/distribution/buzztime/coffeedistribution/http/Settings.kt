@@ -20,7 +20,8 @@ class Settings{
         var ACTION_ORDER : String = "com.store.buzztime.coffeedistribution.http.order"
         var ORDER_OPERATION_KEY : String = "com.store.buzztime.coffeedistribution.http.orderoperation"
         var ORDER_OPERATION_CONFIRM : Int = 1
-        var ORDER_OPERATION_CANCEL : Int = 2
+        var ORDER_OPERATION_GETED: Int = 2
+        var ORDER_OPERATION_POSTED : Int = 3
         var DEBUG : Boolean = true;
         var TEST_REST : Boolean = false;
         var SERVER_DEBUG = "http://139.196.228.248:52072/Rest/CoffeeService/"
