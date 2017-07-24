@@ -3,6 +3,7 @@ package com.distribution.buzztime.coffeedistribution;
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import com.baidu.mapapi.SDKInitializer
 import com.distribution.buzztime.coffeedistribution.Bean.Order
 import com.distribution.buzztime.coffeedistribution.http.LoginResp
 import java.util.*
@@ -24,6 +25,7 @@ class BaseApplication : Application() {
         super.onCreate()
         context = this
         speechHelper = SpeechHelper(this)
+        SDKInitializer.initialize(this)
 
     }
 

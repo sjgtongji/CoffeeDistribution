@@ -6,6 +6,9 @@ package com.distribution.buzztime.coffeedistribution.http
 
 class Settings{
     companion object{
+        var DIALOG_TITLE_KEY : String = "com.store.buzztime.coffeedistribution.http.dialogtitle"
+        var NAME_KEY : String  = "com.store.buzztime.coffeedistribution.http.name"
+        var PWD_KEY : String = "com.store.buzztime.coffeedistribution.http.password"
         //0:未确认；1：已确认；2：取消；3：已配送；4：已完成；5：门店接单；6：骑手取餐；7：骑手送餐中
         var ORDER_INIT : Int = 0
         var ORDER_CONFIRM : Int = 1

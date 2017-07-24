@@ -25,3 +25,7 @@
 #-renamesourcefileattribute SourceFile
 -keep class com.iflytek.**{*;}
 -keepattributes Signature
+
+-keep class com.baidu.** {*;}
+-keep class vi.com.** {*;}
+-dontwarn com.baidu.**

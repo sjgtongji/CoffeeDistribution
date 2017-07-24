@@ -21,33 +21,32 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+        }
     }
     dataBinding {
         enabled = true
+    }
+    productFlavors {
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'src/main/jniLibs')
+
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:25.4.0'
     testImplementation 'junit:junit:4.12'
-    compile "com.android.support:recyclerview-v7:25.3.1"
+    compile 'com.android.support:recyclerview-v7:25.3.1'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     kapt "com.android.databinding:compiler:$android_plugin_version"
-
     compile "org.jetbrains.anko:anko-sdk25:$anko_version"
     compile "org.jetbrains.anko:anko-appcompat-v7-common:$anko_version"
-
     compile 'com.squareup.okhttp:okhttp:2.4.0'
-
     compile 'io.reactivex:rxjava:1.0.12'
     compile 'io.reactivex:rxandroid:0.24.0'
-
     compile 'com.google.code.gson:gson:2.8.0'
-
-
 }

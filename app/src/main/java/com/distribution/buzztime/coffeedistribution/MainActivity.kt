@@ -40,38 +40,47 @@ class MainActivity : BaseActivity() , View.OnClickListener{
                 }
 
                 // TODO login
-                var address =
-                        if(DEBUG){
-                            "${Settings.LOGIN_URL}?mobile=15026648703&passWord=123";
-                        }else{
-                            "${Settings.LOGIN_URL}?mobile=${name}&passWord=${password}"
-                        }
-                Log.e(TAG , address)
-                var callback = object  : HttpCallback<LoginResp>(LoginResp::class.java){
-                    override fun onTestRest(): LoginResp {
-                        return LoginResp();
-                    }
-
-                    override fun onSuccess(t: LoginResp?) {
-                        Log.e(TAG , "success" + gson.toJson(t))
-                        application.loginResp = t
-                        pushActivity(OrderActivity::class.java , true)
-                    }
-
-                    override fun onFail(t: HttpBaseResp?) {
-                        Log.e(TAG , gson.toJson(t))
-                        Log.e(TAG , t!!.message);
-                    }
-
-                }
-                get(address , callback);
+                login(name , password)
 //                application.speechHelper!!.startSpeaking("你有新的订单")
 //                pushActivity(OrderActivity::class.java , true)
             }
             else -> {}
         }
     }
+    fun login(name : String , password : String){
+        showDialog()
+        var address =
+                if(DEBUG){
+                    "${Settings.LOGIN_URL}?mobile=15026648703&passWord=123";
+                }else{
+                    "${Settings.LOGIN_URL}?mobile=${name}&passWord=${password}"
+                }
+        Log.e(TAG , address)
+        var callback = object  : HttpCallback<LoginResp>(LoginResp::class.java){
+            override fun onTestRest(): LoginResp {
+                hideDialog()
+                return LoginResp();
+            }
 
+            override fun onSuccess(t: LoginResp?) {
+                hideDialog()
+                Log.e(TAG , "success" + gson.toJson(t))
+                application.loginResp = t
+                PrefUtils().putString(this@MainActivity , Settings.NAME_KEY , name)
+                PrefUtils().putString(this@MainActivity , Settings.PWD_KEY , password)
+                pushActivity(OrderActivity::class.java , true)
+            }
+
+            override fun onFail(t: HttpBaseResp?) {
+                hideDialog()
+                showText(t!!.message)
+                Log.e(TAG , gson.toJson(t))
+                Log.e(TAG , t!!.message);
+            }
+
+        }
+        get(address , callback);
+    }
     var user : User = User();
     lateinit var dataBind : ActivityMainBinding;
     var permissions : MutableList<String> = mutableListOf(
@@ -115,6 +124,11 @@ class MainActivity : BaseActivity() , View.OnClickListener{
     override fun initDatas(view : View) {
         dataBind = DataBindingUtil.bind(view , null);
         dataBind.data = user;
+        var name : String = PrefUtils().getString(this , Settings.NAME_KEY ,"")
+        var password : String = PrefUtils().getString(this , Settings.PWD_KEY , "")
+        if(name != null && !name.isEmpty() && password != null && !password.isEmpty()){
+            login(name , password)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

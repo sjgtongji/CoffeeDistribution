@@ -231,4 +231,9 @@ abstract class BaseActivity : AppCompatActivity() {
         Toast.makeText(this, text , Toast.LENGTH_LONG).show()
     }
 
+    fun showConfirmDialog(requestCode: Int , title : String){
+        var intent = Intent(this, DialogActivity::class.java)
+        intent.putExtra(Settings.DIALOG_TITLE_KEY , title)
+        pushActivityForResult(intent , requestCode)
+    }
 }
