@@ -76,7 +76,7 @@
         <activity android:name=".DialogActivity" android:theme="@style/Theme.ActivityDialogStyle"></activity>
         <service android:name=".SyncService"></service>
         <receiver android:name=".NewOrderReceiver"></receiver>
-        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
+        <service android:name="com.baidu.location.f" android:enabled="true">
         </service>
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"

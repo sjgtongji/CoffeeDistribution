@@ -95,7 +95,7 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
         var filter : IntentFilter = IntentFilter();
         filter.addAction(Settings.ACTION_ORDER)
         registerReceiver(orderReceiver , filter)
-
+        initLocalClient()
 
     }
 
@@ -223,7 +223,9 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
 
     lateinit var localClent : LocationClient;
     lateinit var localListener : BDLocationListener;
-    fun navigate(order : Order){
+    var lat : Double = -1.00
+    var lng : Double = -1.00
+    fun initLocalClient(){
         localClent = LocationClient(application)
         val option = LocationClientOption()
         option.locationMode = LocationClientOption.LocationMode.Hight_Accuracy
@@ -273,18 +275,8 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
                 }
                 Log.e(TAG , p0!!.latitude.toString())
                 Log.e(TAG , p0!!.longitude.toString())
-                val pt1 : LatLng = LatLng(p0!!.latitude , p0!!.longitude)
-                val pt2 : LatLng = LatLng(order.address!!.latitude , order.address!!.longitude)
-                val para = NaviParaOption()
-                        .startPoint(pt1).endPoint(pt2)
-                        .startName("我").endName(order.deliveryAddress)
-
-                try {
-                    // 调起百度地图骑行导航
-                    openBaiduMapBikeNavi(para, this@OrderActivity)
-                } catch (e: BaiduMapAppNotSupportNaviException) {
-                    e.printStackTrace()
-                }
+                lat = p0!!.latitude
+                lng = p0!!.longitude
             }
 
             override fun onConnectHotSpotMessage(p0: String?, p1: Int) {
@@ -293,6 +285,24 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
         }
         localClent.registerLocationListener(localListener)
         localClent.start()
+    }
+    fun navigate(order : Order){
+        if(lat < 0 || lng < 0){
+            showText("定位失败")
+            return
+        }
+        val pt1 : LatLng = LatLng(lat , lng)
+        val pt2 : LatLng = LatLng(order.address!!.latitude , order.address!!.longitude)
+        val para = NaviParaOption()
+                .startPoint(pt1).endPoint(pt2)
+                .startName("我").endName(order.deliveryAddress)
+
+        try {
+            // 调起百度地图骑行导航
+            openBaiduMapBikeNavi(para, this@OrderActivity)
+        } catch (e: BaiduMapAppNotSupportNaviException) {
+            e.printStackTrace()
+        }
 //        val mLat1 = 39.915291
 //        val mLon1 = 116.403857
 //// 百度大厦坐标
