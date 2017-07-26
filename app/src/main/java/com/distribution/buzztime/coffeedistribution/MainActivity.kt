@@ -68,6 +68,7 @@ class MainActivity : BaseActivity() , View.OnClickListener{
                 application.loginResp = t
                 PrefUtils().putString(this@MainActivity , Settings.NAME_KEY , name)
                 PrefUtils().putString(this@MainActivity , Settings.PWD_KEY , password)
+                PrefUtils().putInt(this@MainActivity , Settings.RES_ID_KEY , t!!.Id)
                 pushActivity(OrderActivity::class.java , true)
             }
 
@@ -95,10 +96,12 @@ class MainActivity : BaseActivity() , View.OnClickListener{
     override fun initViews() {
         navigationBar.hiddenButtons()
         navigationBar.setTitle("登录")
-        for(permission in permissions){
-            var hasPermission : Boolean = checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
-            if(!hasPermission){
-                requestPermissions( permissions.toTypedArray(), 0);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            for(permission in permissions){
+                var hasPermission : Boolean = checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
+                if(!hasPermission){
+                    requestPermissions( permissions.toTypedArray(), 0);
+                }
             }
         }
     }

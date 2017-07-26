@@ -191,10 +191,14 @@ class SyncService : Service() {
             }
 
         }
-        var url = "${Settings.GET_UNASSIGNED_ORDER_URL}?distributionId=${(application as BaseApplication).loginResp!!.Id}&startIndex=1&count=20"
+        var resId = PrefUtils().getInt(this, Settings.RES_ID_KEY , -1)
+        if(resId > 0){
+            var url = "${Settings.GET_UNASSIGNED_ORDER_URL}?distributionId=${resId}&startIndex=1&count=20"
 
-        Log.e(TAG, url)
-        http.get(url , callback)
+            Log.e(TAG, url)
+            http.get(url , callback)
+        }
+
 //        var callback = object  : HttpCallback<OrderResp>(OrderResp::class.java){
 //            override fun onTestRest(): OrderResp {
 //                return OrderResp()

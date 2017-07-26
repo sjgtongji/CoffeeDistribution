@@ -64,6 +64,7 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
             R.id.activity_frame_title_btn_left -> {
                 PrefUtils().putString(this@OrderActivity , Settings.NAME_KEY , "")
                 PrefUtils().putString(this@OrderActivity , Settings.PWD_KEY , "")
+                PrefUtils().putInt(this@OrderActivity , Settings.RES_ID_KEY , -1)
                 pushActivity(MainActivity::class.java , true)
             }
             else -> {
