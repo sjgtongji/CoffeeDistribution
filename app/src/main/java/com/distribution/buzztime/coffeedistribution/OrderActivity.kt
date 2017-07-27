@@ -45,21 +45,37 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
     override fun onClick(p0: View?) {
         when(p0!!.id){
             R.id.rl_unfinish -> {
+                rl_search.visibility = View.GONE
                 iv_order.setImageResource(R.mipmap.order_selected)
                 iv_distribute.setImageResource(R.mipmap.distribute_unselected)
                 tv_unfinish.setTextColor(resources.getColor(R.color.text_yellow))
                 tv_finish.setTextColor(resources.getColor(R.color.black))
+                iv_history.setImageResource(R.mipmap.history_unselected)
+                tv_history.setTextColor(resources.getColor(R.color.black))
                 isUnreceive = true
                 getUnreceiveOrders()
             }
             R.id.rl_finish -> {
+                rl_search.visibility = View.GONE
                 iv_order.setImageResource(R.mipmap.order_unselected)
                 iv_distribute.setImageResource(R.mipmap.distribute_selected)
                 tv_unfinish.setTextColor(resources.getColor(R.color.black))
                 tv_finish.setTextColor(resources.getColor(R.color.text_yellow))
+                iv_history.setImageResource(R.mipmap.history_unselected)
+                tv_history.setTextColor(resources.getColor(R.color.black))
                 isUnreceive = false
                 getReceivedOrder();
 //                showConfirmDialog(10 , "确定要接单?")
+            }
+            R.id.rl_history -> {
+                rl_search.visibility = View.VISIBLE
+                iv_order.setImageResource(R.mipmap.order_unselected)
+                iv_distribute.setImageResource(R.mipmap.distribute_unselected)
+                iv_history.setImageResource(R.mipmap.history_selected)
+                tv_unfinish.setTextColor(resources.getColor(R.color.black))
+                tv_finish.setTextColor(resources.getColor(R.color.black))
+                tv_history.setTextColor(resources.getColor(R.color.text_yellow))
+                //TODO 请求已完成订单
             }
             R.id.activity_frame_title_btn_left -> {
                 PrefUtils().putString(this@OrderActivity , Settings.NAME_KEY , "")
@@ -86,6 +102,7 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
     override fun initEvents() {
         rl_unfinish.setOnClickListener(this)
         rl_finish.setOnClickListener(this)
+        rl_history.setOnClickListener(this)
     }
     var orderReceiver : OrderReciver? = null
     override fun initDatas(view: View) {
