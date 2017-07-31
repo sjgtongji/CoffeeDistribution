@@ -12,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -75,7 +76,17 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
                 tv_unfinish.setTextColor(resources.getColor(R.color.black))
                 tv_finish.setTextColor(resources.getColor(R.color.black))
                 tv_history.setTextColor(resources.getColor(R.color.text_yellow))
+                rv_orders.adapter = OrderAdapter(mutableListOf<Order>())
+//                rv_orders.adapter.notifyDataSetChanged()
                 //TODO 请求已完成订单
+            }
+            R.id.iv_search -> {
+                var content:String = et_search.text.toString().trim()
+                if(content == null || content.isEmpty()){
+                    showText("搜索内容不能为空")
+                    return
+                }
+                getHistory(content)
             }
             R.id.activity_frame_title_btn_left -> {
                 PrefUtils().putString(this@OrderActivity , Settings.NAME_KEY , "")
@@ -103,6 +114,7 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
         rl_unfinish.setOnClickListener(this)
         rl_finish.setOnClickListener(this)
         rl_history.setOnClickListener(this)
+        iv_search.setOnClickListener(this)
     }
     var orderReceiver : OrderReciver? = null
     override fun initDatas(view: View) {
@@ -119,6 +131,10 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
     override fun onDestroy() {
         unregisterReceiver(orderReceiver)
         super.onDestroy()
+    }
+
+    fun getHistory(content : String){
+        //TODO 获取历史订单
     }
     fun getUnreceiveOrders(){
         showDialog()
@@ -339,6 +355,17 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
 //        } catch (e: BaiduMapAppNotSupportNaviException) {
 //            e.printStackTrace()
 //        }
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (event!!.keyCode == KeyEvent.KEYCODE_BACK) {
+            val home = Intent(Intent.ACTION_MAIN)
+            home.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            home.addCategory(Intent.CATEGORY_HOME)
+            startActivity(home)
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
