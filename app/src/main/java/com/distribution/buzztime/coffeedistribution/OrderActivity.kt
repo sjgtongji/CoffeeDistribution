@@ -69,6 +69,7 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
 //                showConfirmDialog(10 , "确定要接单?")
             }
             R.id.rl_history -> {
+                isUnreceive = false
                 rl_search.visibility = View.VISIBLE
                 iv_order.setImageResource(R.mipmap.order_unselected)
                 iv_distribute.setImageResource(R.mipmap.distribute_unselected)
@@ -103,6 +104,7 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
         navigationBar.setTitle("骑手")
         navigationBar.displayLeftButton()
         navigationBar.hiddenRightButton()
+        navigationBar.leftBtn.text = "退出登录"
         navigationBar.rightBtn.setOnClickListener(this)
         navigationBar.leftBtn.setOnClickListener(this)
         rv_orders.layoutManager = GridLayoutManager(this, 1)
@@ -135,6 +137,37 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
 
     fun getHistory(content : String){
         //TODO 获取历史订单
+        var callback = object : HttpCallback<OrderResp>(OrderResp::class.java){
+            override fun onSuccess(t: OrderResp?) {
+                hideDialog()
+                Log.e(TAG , gson.toJson(t))
+
+                for(order in t!!.Items){
+                    formatOrder(order)
+                }
+                rv_orders.adapter = OrderAdapter(t.Items)
+            }
+
+            override fun onFail(resp: HttpBaseResp?) {
+                hideDialog()
+                showText(resp!!.message)
+                rv_orders.adapter = OrderAdapter(mutableListOf<Order>())
+            }
+
+            override fun onTestRest(): OrderResp {
+                hideDialog()
+                return OrderResp()
+            }
+
+        }
+        var url =
+                if(DEBUG){
+                    "${Settings.GET_HISTORY_URL}?distributionId=${application.loginResp!!.Id}&startIndex=1&count=20&orderState=${Settings.ORDER_FINISH}&searchKey=${content}"
+                }else{
+                    "${Settings.GET_HISTORY_URL}?distributionId=${application.loginResp!!.Id}&startIndex=1&count=20&orderState=${Settings.ORDER_FINISH}&searchKey=${content}"
+                }
+        Log.e(TAG, url)
+        get(url , callback)
     }
     fun getUnreceiveOrders(){
         showDialog()
@@ -199,9 +232,9 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
         }
         var url =
                 if(DEBUG){
-                    "${Settings.GET_ASSIGNED_ORDER_URL}?distributionId=${application.loginResp!!.Id}&startIndex=1&count=20"
+                    "${Settings.GET_ASSIGNED_ORDER_URL}?distributionId=${application.loginResp!!.Id}&startIndex=1&count=20&orderState=${Settings.ORDER_RIDER_GET},${Settings.ORDER_RIDER_POST}"
                 }else{
-                    "${Settings.GET_ASSIGNED_ORDER_URL}?distributionId=${application.loginResp!!.Id}&startIndex=1&count=20"
+                    "${Settings.GET_ASSIGNED_ORDER_URL}?distributionId=${application.loginResp!!.Id}&startIndex=1&count=20&orderState=${Settings.ORDER_RIDER_GET},${Settings.ORDER_RIDER_POST}"
                 }
         Log.e(TAG, url)
         get(url , callback)
@@ -237,6 +270,7 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
 
             override fun onFail(resp: HttpBaseResp?) {
                 showText(resp!!.message)
+                getUnreceiveOrders()
             }
 
             override fun onTestRest(): Boolean {
@@ -421,6 +455,8 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
                         }
                         else if(data[v.tag as Int].orderState == Settings.ORDER_RIDER_POST){
                             intent.putExtra(Settings.ORDER_OPERATION_KEY, Settings.ORDER_OPERATION_POSTED)
+                        }else{
+                            intent.putExtra(Settings.ORDER_OPERATION_KEY, Settings.ORDER_OPERATION_FINISHED)
                         }
                     }
                     pushActivityForResult(intent , 1)
@@ -462,6 +498,10 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
                 Settings.ORDER_RIDER_POST -> {
                     p0.btn_cancel.text = "配送完成"
                     p0.iv_icon.setImageResource(R.mipmap.navigate)
+                }
+                Settings.ORDER_FINISH -> {
+                    p0.btn_cancel.visibility = View.GONE
+                    p0.iv_icon.visibility = View.GONE
                 }
             }
             p0.bind(data[p1]);

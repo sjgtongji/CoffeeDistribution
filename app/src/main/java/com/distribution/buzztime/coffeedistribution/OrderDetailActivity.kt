@@ -34,7 +34,12 @@ class OrderDetailActivity : BaseActivity() , View.OnClickListener{
             Settings.ORDER_OPERATION_POSTED -> {
                 btn_cancel.text = "配送完成"
             }
-            else -> {}
+            Settings.ORDER_OPERATION_FINISHED -> {
+                btn_cancel.visibility = View.GONE
+            }
+            else -> {
+                btn_cancel.visibility = View.GONE
+            }
         }
     }
 

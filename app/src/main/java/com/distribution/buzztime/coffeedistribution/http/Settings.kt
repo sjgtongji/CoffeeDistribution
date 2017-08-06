@@ -26,6 +26,7 @@ class Settings{
         var ORDER_OPERATION_CONFIRM : Int = 1
         var ORDER_OPERATION_GETED: Int = 2
         var ORDER_OPERATION_POSTED : Int = 3
+        var ORDER_OPERATION_FINISHED : Int = 4
         var DEBUG : Boolean = true;
         var TEST_REST : Boolean = false;
         var SERVER_DEBUG = "http://139.196.228.248:52072/Rest/CoffeeService/"
@@ -34,21 +35,25 @@ class Settings{
         var GET_UNASSIGNED_ORDER = "getUnassignedOrder"
         var GET_ASSIGNED_ORDER = "getAssignedOrderByDistributionId"
         var SET_ORDER_STATE = "setOrderStateByDistributionId"
+        var GET_HISTORY = "GetAssignedOrderByDistributionId"
         lateinit var LOGIN_URL : String
         lateinit var GET_UNASSIGNED_ORDER_URL : String
         lateinit var GET_ASSIGNED_ORDER_URL : String
         lateinit var SET_ORDER_STATE_URL : String
+        lateinit var GET_HISTORY_URL : String
         init {
             if(DEBUG){
                 LOGIN_URL = SERVER_DEBUG + LOGIN
                 GET_UNASSIGNED_ORDER_URL = SERVER_DEBUG + GET_UNASSIGNED_ORDER
                 GET_ASSIGNED_ORDER_URL = SERVER_DEBUG + GET_ASSIGNED_ORDER
                 SET_ORDER_STATE_URL = SERVER_DEBUG + SET_ORDER_STATE
+                GET_HISTORY_URL = SERVER_DEBUG + GET_HISTORY
             }else{
                 LOGIN_URL = SERVER_RELEASE + LOGIN
                 GET_UNASSIGNED_ORDER_URL = SERVER_RELEASE + GET_UNASSIGNED_ORDER
                 GET_ASSIGNED_ORDER_URL = SERVER_RELEASE + GET_ASSIGNED_ORDER
                 SET_ORDER_STATE_URL = SERVER_RELEASE + SET_ORDER_STATE
+                GET_HISTORY_URL = SERVER_RELEASE + GET_HISTORY
             }
         }
     }
