@@ -90,15 +90,23 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
                 getHistory(content)
             }
             R.id.activity_frame_title_btn_left -> {
-                PrefUtils().putString(this@OrderActivity , Settings.NAME_KEY , "")
-                PrefUtils().putString(this@OrderActivity , Settings.PWD_KEY , "")
-                PrefUtils().putInt(this@OrderActivity , Settings.RES_ID_KEY , -1)
-                pushActivity(MainActivity::class.java , true)
+//                PrefUtils().putString(this@OrderActivity , Settings.NAME_KEY , "")
+//                PrefUtils().putString(this@OrderActivity , Settings.PWD_KEY , "")
+//                PrefUtils().putInt(this@OrderActivity , Settings.RES_ID_KEY , -1)
+//                pushActivity(MainActivity::class.java , true)
+                showConfirmDialog(500 , "确定要退出登录?")
             }
             else -> {
 
             }
         }
+    }
+
+    fun logout(){
+        PrefUtils().putString(this@OrderActivity , Settings.NAME_KEY , "")
+        PrefUtils().putString(this@OrderActivity , Settings.PWD_KEY , "")
+        PrefUtils().putInt(this@OrderActivity , Settings.RES_ID_KEY , -1)
+        pushActivity(MainActivity::class.java , true)
     }
     override fun initViews() {
         navigationBar.setTitle("骑手")
@@ -417,6 +425,9 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
                             receiveOrder(application.order!! , Settings.ORDER_FINISH)
                         }
                     }
+                }
+                500 -> {
+                    logout()
                 }
                 else -> {}
             }
