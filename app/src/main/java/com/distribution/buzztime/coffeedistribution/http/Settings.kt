@@ -22,6 +22,8 @@ class Settings{
 
         var PREF_IS_SERVICE_STARTED : String = "com.store.buzztime.coffeedistribution.http.isStarted"
         var ACTION_ORDER : String = "com.store.buzztime.coffeedistribution.http.order"
+        var ACTION_NEW_REMINDER : String = "com.store.buzztime.coffeedistribution.http.reminder"
+
         var ORDER_OPERATION_KEY : String = "com.store.buzztime.coffeedistribution.http.orderoperation"
         var ORDER_OPERATION_CONFIRM : Int = 1
         var ORDER_OPERATION_GETED: Int = 2

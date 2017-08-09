@@ -43,6 +43,8 @@ import org.jetbrains.anko.textColor
  */
 class OrderActivity : BaseActivity(), View.OnClickListener{
     var isUnreceive : Boolean = true
+    var newOrderReminder : NewOrderReceiver ? = null
+
     override fun onClick(p0: View?) {
         when(p0!!.id){
             R.id.rl_unfinish -> {
@@ -134,6 +136,10 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
         var filter : IntentFilter = IntentFilter();
         filter.addAction(Settings.ACTION_ORDER)
         registerReceiver(orderReceiver , filter)
+        newOrderReminder = NewOrderReceiver()
+        var reminderFilter : IntentFilter = IntentFilter()
+        reminderFilter.addAction(Settings.ACTION_NEW_REMINDER)
+        registerReceiver(newOrderReminder , reminderFilter)
         initLocalClient()
 
     }
@@ -266,6 +272,11 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
                 when(state){
                     Settings.ORDER_RIDER_GET -> {
                         getUnreceiveOrders()
+                        var cancelIntent : Intent = Intent(Settings.ACTION_NEW_REMINDER)
+                        cancelIntent.putExtra(ACTION_KEY , com.distribution.buzztime.coffeedistribution.ACTION_STOP)
+                        cancelIntent.putExtra(ORDER_ID_KEY , order.id)
+                        sendBroadcast(cancelIntent)
+
                     }
                     Settings.ORDER_RIDER_POST, Settings.ORDER_FINISH-> {
                         getReceivedOrder()

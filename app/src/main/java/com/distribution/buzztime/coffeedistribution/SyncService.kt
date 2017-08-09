@@ -42,7 +42,7 @@ class SyncService : Service() {
 
     val gson : Gson = Gson()
 
-    var speechHelper : SpeechHelper = SpeechHelper(this)
+//    var speechHelper : SpeechHelper = SpeechHelper(this)
 
     /**
      * 启动服务
@@ -177,8 +177,14 @@ class SyncService : Service() {
                 var orders = (application as BaseApplication).unReceiveOrders
                 for(order in t!!.Items){
                     if(!orders.contains(order)){
-                        speechHelper!!.startSpeaking("您有新的订单")
-                        sendBroadcast(Intent(Settings.ACTION_ORDER))
+//                        speechHelper!!.startSpeaking("您有新的订单")
+                        var speakIntent : Intent = Intent(Settings.ACTION_NEW_REMINDER)
+                        speakIntent.putExtra(ACTION_KEY , com.distribution.buzztime.coffeedistribution.ACTION_START)
+                        speakIntent.putExtra(ORDER_ID_KEY , order.id)
+                        sendBroadcast(speakIntent)
+                        var intent : Intent = Intent(Settings.ACTION_ORDER)
+                        sendBroadcast(intent)
+
 //                        sendBroadcast(Intent(this@SyncService, NewOrderReceiver::class.java))
                         break;
                     }
