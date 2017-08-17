@@ -124,7 +124,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/iv_search"
-                android:hint="姓名、电话、日期"
+                android:hint="姓名、电话、日期(日期格式如20170815)"
                 android:layout_alignParentLeft="true"
                 android:background="@null"
                 android:layout_centerVertical="true"/>
