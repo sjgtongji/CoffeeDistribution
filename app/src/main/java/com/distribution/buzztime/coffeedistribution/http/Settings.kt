@@ -29,10 +29,10 @@ class Settings{
         var ORDER_OPERATION_GETED: Int = 2
         var ORDER_OPERATION_POSTED : Int = 3
         var ORDER_OPERATION_FINISHED : Int = 4
-        var DEBUG : Boolean = true;
+        var DEBUG : Boolean = false;
         var TEST_REST : Boolean = false;
         var SERVER_DEBUG = "http://139.196.228.248:52072/Rest/CoffeeService/"
-        var SERVER_RELEASE = "http://waimai.buzztimecoffee.com/Rest/CoffeeService/";
+        var SERVER_RELEASE = "http://139.196.47.184:52072/Rest/CoffeeService/";
         var LOGIN = "checkDistributionExsit";
         var GET_UNASSIGNED_ORDER = "getUnassignedOrder"
         var GET_ASSIGNED_ORDER = "getAssignedOrderByDistributionId"

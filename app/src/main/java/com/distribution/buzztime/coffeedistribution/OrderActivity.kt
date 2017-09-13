@@ -44,7 +44,7 @@ import org.jetbrains.anko.textColor
 class OrderActivity : BaseActivity(), View.OnClickListener{
     var isUnreceive : Boolean = true
     var newOrderReminder : NewOrderReceiver ? = null
-
+    var isFirstIn : Boolean = true
     override fun onClick(p0: View?) {
         when(p0!!.id){
             R.id.rl_unfinish -> {
@@ -189,13 +189,18 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
             override fun onSuccess(t: OrderResp?) {
                 hideDialog()
                 Log.e(TAG , gson.toJson(t))
-
                 for(order in t!!.Items){
                     formatOrder(order)
                 }
                 application.unReceiveOrders = t.Items
                 rv_orders.adapter = OrderAdapter(application.unReceiveOrders)
-
+                if(t!!.Items!!.size > 0 && isFirstIn){
+                    isFirstIn = false
+                    var speakIntent : Intent = Intent(Settings.ACTION_NEW_REMINDER)
+                    speakIntent.putExtra(ACTION_KEY , com.distribution.buzztime.coffeedistribution.ACTION_START)
+                    speakIntent.putExtra(ORDER_ID_KEY , t!!.Items!![0].id)
+                    sendBroadcast(speakIntent)
+                }
             }
 
             override fun onFail(resp: HttpBaseResp?) {
