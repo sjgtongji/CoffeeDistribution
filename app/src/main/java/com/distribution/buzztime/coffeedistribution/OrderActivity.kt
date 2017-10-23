@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.widget.GridLayoutManager
@@ -501,6 +502,15 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
 //                        //TODO navigation
 //                    }
                 }
+                R.id.iv_phone -> {
+                    var order : Order = data[v.tag as Int]
+                    Log.e(TAG , order.telephone)
+                    val intent = Intent()
+                    intent.action = Intent.ACTION_DIAL
+                    intent.data = Uri.parse("tel:"+ order.telephone)
+                    startActivity(intent)
+
+                }
                 else -> {Log.e("" , "error")}
             }
         }
@@ -513,6 +523,8 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
             p0.ll_order.setTag(p1)
             p0.iv_icon.setTag(p1)
             p0.iv_icon.setOnClickListener(this)
+            p0.iv_phone.setOnClickListener(this)
+            p0.iv_phone.setTag(p1)
             when(data[p1].orderState){
                 Settings.ORDER_STORE_CONFIRM -> {
                     p0.btn_cancel.text = "接单"
@@ -553,10 +565,12 @@ class OrderActivity : BaseActivity(), View.OnClickListener{
         var btn_cancel : Button
         var ll_order : LinearLayout
         var iv_icon : ImageView
+        var iv_phone : ImageView
         init {
             btn_cancel = binding.root.findViewById(R.id.btn_cancel) as Button
             ll_order = binding.root.findViewById(R.id.ll_order) as LinearLayout
             iv_icon = binding.root.findViewById(R.id.iv_icon) as ImageView
+            iv_phone = binding.root.findViewById(R.id.iv_phone) as ImageView
         }
         fun bind(data : Any){
             binding.setVariable(BR.data , data)

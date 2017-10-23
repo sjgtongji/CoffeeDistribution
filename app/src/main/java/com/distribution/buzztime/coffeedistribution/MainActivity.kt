@@ -90,7 +90,8 @@ class MainActivity : BaseActivity() , View.OnClickListener{
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
             android.Manifest.permission.ACCESS_FINE_LOCATION,
-            android.Manifest.permission.CHANGE_NETWORK_STATE);
+            android.Manifest.permission.CHANGE_NETWORK_STATE,
+            android.Manifest.permission.CALL_PHONE);
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun initViews() {
